@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import { createTodo } from "../api/todo";
 import useFocus from "../hooks/useFocus";
-import RecommendTodo from "./Dropdown";
+import Dropdown from "./Dropdown";
+import useDebounce from "../hooks/useDebounce";
 
 type InputTodoProps = {
   setTodos: React.Dispatch<React.SetStateAction<TodoItem[]>>;
@@ -13,6 +14,8 @@ const InputTodo = ({ setTodos }: InputTodoProps) => {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { ref, setFocus } = useFocus();
+
+  const debouncedText = useDebounce(inputText, 500);
 
   useEffect(() => {
     setFocus();
@@ -69,7 +72,7 @@ const InputTodo = ({ setTodos }: InputTodoProps) => {
           <FaSpinner className="spinner" />
         )}
       </form>
-      {inputText && <RecommendTodo text={inputText} />}
+      {debouncedText && <Dropdown text={debouncedText} />}
     </>
   );
 };
