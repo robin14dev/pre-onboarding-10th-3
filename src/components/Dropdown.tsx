@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { getRecommendTodoList } from "../api/search";
 import styled from "styled-components";
+import { createTodo } from "../api/todo";
 
 type DropdownProps = {
   text: string;
+
+  setTodos: React.Dispatch<React.SetStateAction<TodoItem[]>>;
+  setInputText: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const StyledUl = styled.ul`
@@ -34,6 +38,7 @@ const StyledLi = styled.li`
   gap: 10px;
   width: 354px;
   height: 28px;
+  cursor: pointer;
 
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -86,9 +91,26 @@ const highlightText = (title: string, searchText: string) => {
   return title;
 };
 
-const Dropdown = ({ text }: DropdownProps) => {
+const Dropdown = ({ text, setTodos, setInputText }: DropdownProps) => {
   const [items, setItems] = useState<string[]>([]);
   const [page, setPage] = useState(1);
+
+  const handleClick = async (title: string) => {
+    console.log(title);
+
+    try {
+      const newItem = { title };
+      const { data } = await createTodo(newItem);
+
+      if (data) {
+        return setTodos((prev) => [...prev, data]);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setInputText("");
+    }
+  };
 
   useEffect(() => {
     const getItems = async (text: string, page: number) => {
@@ -104,7 +126,9 @@ const Dropdown = ({ text }: DropdownProps) => {
     <StyledUl>
       {items.length > 0 &&
         items.map((item) => (
-          <StyledLi key={item}>{highlightText(item, text)}</StyledLi>
+          <StyledLi key={item} onClick={() => handleClick(item)}>
+            {highlightText(item, text)}
+          </StyledLi>
         ))}
     </StyledUl>
   );

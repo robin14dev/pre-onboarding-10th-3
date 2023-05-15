@@ -72,7 +72,13 @@ const InputTodo = ({ setTodos }: InputTodoProps) => {
           <FaSpinner className="spinner" />
         )}
       </form>
-      {debouncedText && <Dropdown text={debouncedText} />}
+      {debouncedText && (
+        <Dropdown
+          text={debouncedText}
+          setInputText={setInputText}
+          setTodos={setTodos}
+        />
+      )}
     </>
   );
 };
