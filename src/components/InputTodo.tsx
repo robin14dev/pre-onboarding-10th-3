@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { createTodo } from "../api/todo";
 import useFocus from "../hooks/useFocus";
+import RecommendTodo from "./Dropdown";
 
 type InputTodoProps = {
   setTodos: React.Dispatch<React.SetStateAction<TodoItem[]>>;
@@ -16,6 +17,10 @@ const InputTodo = ({ setTodos }: InputTodoProps) => {
   useEffect(() => {
     setFocus();
   }, [setFocus]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+  };
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,23 +51,26 @@ const InputTodo = ({ setTodos }: InputTodoProps) => {
   );
 
   return (
-    <form className="form-container" onSubmit={handleSubmit}>
-      <input
-        className="input-text"
-        placeholder="Add new todo..."
-        ref={ref}
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        disabled={isLoading}
-      />
-      {!isLoading ? (
-        <button className="input-submit" type="submit">
-          <FaPlusCircle className="btn-plus" />
-        </button>
-      ) : (
-        <FaSpinner className="spinner" />
-      )}
-    </form>
+    <>
+      <form className="form-container" onSubmit={handleSubmit}>
+        <input
+          className="input-text"
+          placeholder="Add new todo..."
+          ref={ref}
+          value={inputText}
+          onChange={handleChange}
+          disabled={isLoading}
+        />
+        {!isLoading ? (
+          <button className="input-submit" type="submit">
+            <FaPlusCircle className="btn-plus" />
+          </button>
+        ) : (
+          <FaSpinner className="spinner" />
+        )}
+      </form>
+      {inputText && <RecommendTodo text={inputText} />}
+    </>
   );
 };
 
