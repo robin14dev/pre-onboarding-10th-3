@@ -1,7 +1,6 @@
 import TodoItem from "./TodoItem";
 
 const TodoList = ({ todos, setTodos }) => {
-  console.log(todos);
   return todos.length ? (
     <ul>
       {todos.map(({ id, title }) => (
