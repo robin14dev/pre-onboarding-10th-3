@@ -8,7 +8,9 @@ import { getTodoList } from "../api/todo";
 const Main = () => {
   const [todoListData, setTodoListData] = useState([]);
 
+  console.log("main rendering", todoListData);
   useEffect(() => {
+    console.log("main useeffect");
     (async () => {
       const { data } = await getTodoList();
       setTodoListData(data || []);
